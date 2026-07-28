@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import  connectDB  from './config/db.js'
 import cookieParser from 'cookie-parser'
 import authRoutes from './routes/authRoutes.js'
+import logger from './utils/logger.js'
 
 dotenv.config()
 
@@ -17,11 +18,18 @@ app.use('/api/auth',authRoutes)
 
 
    const startApp=async()=>{
-    await connectDB()
+    try {
+         await connectDB()
 
     app.listen(PORT,()=>{
     console.log(`server is listening on port:${PORT}`)
-})
+    })
+    } catch (error) {
+        logger.error(`Error while starting server :${error}`)
+        
+    }
+   
+
 
 }
 
