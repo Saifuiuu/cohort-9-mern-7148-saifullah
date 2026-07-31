@@ -56,7 +56,7 @@ export const getNote =async (req, res)=>{
 
   } catch (error) {
      logger.error(`Error while finding note ${error}`)
-     return res.status(500).json({message:`server eror while getNote :${error}`})
+     return res.status(500).json({message:`server eror while getNote `})
   }
 };
 
