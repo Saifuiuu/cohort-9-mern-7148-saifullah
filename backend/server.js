@@ -4,6 +4,7 @@ import  connectDB  from './config/db.js'
 import cookieParser from 'cookie-parser'
 import authRoutes from './routes/authRoutes.js'
 import logger from './utils/logger.js'
+import noteRoutes from './routes/noteRoutes.js'
 
 dotenv.config()
 
@@ -13,7 +14,9 @@ const PORT=process.env.PORT
 
 app.use(express.json())
 app.use(cookieParser())
+
 app.use('/api/auth',authRoutes)
+app.use('/api/note',noteRoutes)
 
 
 
