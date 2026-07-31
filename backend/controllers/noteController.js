@@ -17,7 +17,7 @@ export const createNote = async (req, res) => {
       user: req.user._id,
     });
 
-    logger.info(`Note created successfully by user :{req.user._id}`);
+    logger.info(`Note created successfully by user :${req.user._id}`);
     return res.status(201).json(note);
   } catch (error) {
     logger.error(`Error while note creation :${error}`);
@@ -56,6 +56,7 @@ export const getNote =async (req, res)=>{
 
   } catch (error) {
      logger.error(`Error while finding note ${error}`)
+     return res.status(500).json({message:`server eror while getNote :${error}`})
   }
 };
 
@@ -70,7 +71,7 @@ export const updateNote= async(req,res)=>{
 
 
         if(note.user.toString() !== req.user._id.toString()){
-            return res.status(404).json({message:"No Authorize to update "})
+            return res.status(404).json({message:"Not authorized to access this  "})
         }
 
 
@@ -102,7 +103,7 @@ export const deleteNote= async(req,res)=>{
 
 
         if(note.user.toString() !== req.user._id.toString()){
-            return res.status(404).json({message:"No Authorize to update "})
+            return res.status(404).json({message:"No authorize to delete this "})
         }
 
         await note.deleteOne()
