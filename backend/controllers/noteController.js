@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 
 
 const findUserNote =async(noteId,userId)=>{
+  try{
   if (!mongoose.Types.ObjectId.isValid(noteId)) {
         return {error: "Invalid id"};
     }
@@ -15,7 +16,11 @@ const findUserNote =async(noteId,userId)=>{
 
     if (note.user.toString()!==userId.toString()){
       return{ error:'Not authorize' }}
-    return { note };
+    return { note };}
+    catch(error){
+      logger.error(`FinduserNOte Error:${error}`)
+      throw error;
+    }
 };
 
 
@@ -98,8 +103,24 @@ export const updateNote= async(req,res)=>{
       return res.status(403).json({message:' not authorized to update this note'});}
 
     
-        note.title=req.body.title||note.title
-        note.content=req.body.content||note.content
+        if(req.body.title!==undefined){
+    note.title = req.body.title;}
+
+if(req.body.content!==undefined){
+    note.content = req.body.content;}
+
+if(req.body.title!==undefined&&req.body.title.trim()===""){
+    return res.status(400).json({
+        message:"Title cannot be empty"
+    });
+}
+if(req.body.content!==undefined&&req.body.content.trim()===""){
+    return res.status(400).json({
+        message:"Content cannot be empty"
+    });
+}
+
+
 
         const updatedNote=await note.save()
 
