@@ -19,5 +19,6 @@ const noteSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+noteSchema.index({ user: 1, createdAt: -1 });
 
 export default mongoose.model('Note', noteSchema);

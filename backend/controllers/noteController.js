@@ -1,5 +1,24 @@
 import Note from "../models/Note.js";
 import logger from "../utils/logger.js";
+import mongoose from "mongoose";
+
+
+
+const findUserNote =async(noteId,userId)=>{
+  if (!mongoose.Types.ObjectId.isValid(noteId)) {
+        return {error: "Invalid id"};
+    }
+
+    const note = await Note.findById(noteId);
+    if (!note) {
+      return { error: 'Not found' };}
+
+    if (note.user.toString()!==userId.toString()){
+      return{ error:'Not authorize' }}
+    return { note };
+};
+
+
 
 export const createNote = async (req, res) => {
   try {
@@ -40,20 +59,22 @@ export const getAllNotes = async (req, res) => {
 
 export const getNote =async (req, res)=>{
   try {
-    const note =await Note.findById(req.params.id);
+    const {note,error} = await findUserNote(req.params.id, req.user._id);
+    if (error === "Invalid id") {
+    return res.status(400).json({ message: "Invalid note id" });
+}
+if (error === "Not found") {
+    return res.status(404).json({ message: "Note not found" });
+}
 
-    if (!note) {
+     if(error==='Not found') {
+      return res.status(404).json({message:'Note not found'});}
 
-        return res.status(404).json({message:"Note not found "})
-    }
-
-    if(note.user.toString()!==req.user._id.toString()){
-        return res.status(404).json({message:"Not authorized to access this "})
-    }
-
+  if(error==='Not authorize') {
+      return res.status(403).json({message:' not authorized to access this note'});}
+ 
     res.status(200).json(note)
    
-
   } catch (error) {
      logger.error(`Error while finding note ${error}`)
      return res.status(500).json({message:`server eror while getNote `})
@@ -63,28 +84,27 @@ export const getNote =async (req, res)=>{
 export const updateNote= async(req,res)=>{
     try {
         
-        const note= await Note.findById(req.params.id)
+        const {note,error} = await findUserNote(req.params.id, req.user._id);
 
-        if(!note){
-            return res.status(404).json({message:"Note not found "})
-        }
-
-
-        if(note.user.toString() !== req.user._id.toString()){
-            return res.status(404).json({message:"Not authorized to access this  "})
-        }
+        if (error === "Invalid id") {
+    return res.status(400).json({ message: "Invalid note id" });
+}
 
 
-        note.title=req.body.title || note.title
-        note.content=req.body.content || note.content
+     if(error==='Not found') {
+      return res.status(404).json({message:'Note not found'});}
+
+  if(error==='Not authorize') {
+      return res.status(403).json({message:' not authorized to update this note'});}
+
+    
+        note.title=req.body.title||note.title
+        note.content=req.body.content||note.content
 
         const updatedNote=await note.save()
 
         logger.info(`Updated noted id:${note._id}`)
         res.status(200).json(updatedNote)
-
-
-
     } catch (error) {
 
           logger.error(`Update note error: ${error}`);
@@ -95,18 +115,18 @@ export const updateNote= async(req,res)=>{
 
 export const deleteNote= async(req,res)=>{
     try {
-        const note= await Note.findById(req.params.id)
+        const {note,error} = await findUserNote(req.params.id, req.user._id);
+        if (error === "Invalid id") {
+    return res.status(400).json({ message: "Invalid note id" });
+}
 
-         if(!note){
-            return res.status(404).json({message:"Note not found "})
-        }
+     if(error==='Not found') {
+      return res.status(404).json({message:'Note not found'});}
 
+  if(error==='Not authorize') {
+      return res.status(403).json({message:' not authorized to delete this note'});}
 
-        if(note.user.toString() !== req.user._id.toString()){
-            return res.status(404).json({message:"No authorize to delete this "})
-        }
-
-        await note.deleteOne()
+           await note.deleteOne()
 
         return res.status(200).json({message:"Note deleted successfully "})
 
