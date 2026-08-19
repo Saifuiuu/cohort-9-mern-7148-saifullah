@@ -26,13 +26,13 @@ export const signup = async (req, res) => {
 
     const user = await User.create({ name, email, password });
 
-    const token = genToken(user._id);
+    const token =genToken(user._id);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+    res.cookie("token",token,{
+      httpOnly:true,
+      secure:process.env.NODE_ENV==="production",
+      sameSite:"strict",
+      maxAge:7*24*60*60*1000,
     });
 
     res.status(201).json({
@@ -56,9 +56,12 @@ export const login = async (req, res) => {
     }
 
     const user = await User.findOne({ email: email.toLowerCase() });
-
+if(!user){
+return res.status(401).json({ message: "user Not found" });
+}
     const isMatched = await user.matchPassword(password);
-    if (!user || !isMatched) {
+
+    if (!isMatched) {
       return res.status(401).json({ message: "user password not matched" });
     }
 
@@ -66,9 +69,9 @@ export const login = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV==="production",
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7*24*60*60*1000,
     });
 
     res.status(200).json({
