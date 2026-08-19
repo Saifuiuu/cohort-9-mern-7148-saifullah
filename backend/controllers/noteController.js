@@ -66,7 +66,7 @@ export const getNote =async (req, res)=>{
   try {
     const {note,error} = await findUserNote(req.params.id, req.user._id);
     if (error === "Invalid id") {
-    return res.status(400).json({ message: "Invalid note id" });
+    return res.status(404).json({ message: "Invalid note id" });
 }
 if (error === "Not found") {
     return res.status(404).json({ message: "Note not found" });
@@ -92,7 +92,7 @@ export const updateNote= async(req,res)=>{
         const {note,error} = await findUserNote(req.params.id, req.user._id);
 
         if (error === "Invalid id") {
-    return res.status(400).json({ message: "Invalid note id" });
+    return res.status(404).json({ message: "Invalid note id" });
 }
 
 
@@ -138,7 +138,7 @@ export const deleteNote= async(req,res)=>{
     try {
         const {note,error} = await findUserNote(req.params.id, req.user._id);
         if (error === "Invalid id") {
-    return res.status(400).json({ message: "Invalid note id" });
+    return res.status(404).json({ message: "Invalid note id" });
 }
 
      if(error==='Not found') {

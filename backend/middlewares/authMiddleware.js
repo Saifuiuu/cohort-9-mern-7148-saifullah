@@ -11,12 +11,12 @@ import User from '../models/User.js'
         const token=req.cookies.token
 
         if(!token){
-            return res.status(400).json({message:"User is not Authorized !"})
+            return res.status(401).json({message:"User is not Authorized !"})
         }
 
         let decoded= jwt.verify(token,process.env.JWT_SECRET)
         if(!decoded){
-             return res.status(400).json({message:"token is changed !"})
+             return res.status(401).json({message:"token is changed !"})
         }
 
         req.user= await User.findById(decoded.id).select('-password')
