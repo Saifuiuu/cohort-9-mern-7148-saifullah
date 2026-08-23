@@ -39,7 +39,7 @@ const Login = () => {
      <h2 className='text-2xl mb-5 text-amber-50'  >Login</h2>
 
  <form  onSubmit={handleSubmit} className='flex flex-col items-center justify-center text-amber-50 gap-5'>
-    <input className='border border-black px-5 py-3 rounded-2xl' type="text" placeholder='Enter your Email' value={email} onChange={(e)=>{setEmail(e.target.value)}} required/>
+    <input className='border border-black px-5 py-3 rounded-2xl' type="email" placeholder='Enter your Email' value={email} onChange={(e)=>{setEmail(e.target.value)}} required/>
     <input  className='border border-black  px-5 py-3 rounded-2xl' type="password"  placeholder='Enter your password' value={password} onChange={(e)=>{setPassword(e.target.value)}} required />
  
     {error && <p style={{color:'red'}}>{error}</p>}
