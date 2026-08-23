@@ -60,12 +60,15 @@ const handleDelete=async(id)=>{
   setLoading(true)
   setError('')
   try {
+
     await api.delete(`/note/${id}`)
     setNotes(notes.filter(note=>
       note._id!==id
     ))
   } catch (error) {
-    setError(error.response?.data?.message||error)
+
+    setError(error.response?.data?.message||error.message||"failed to delete note")
+    
   }finally{
 setLoading(false)
   }

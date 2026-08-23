@@ -15,9 +15,16 @@ const NoteEditor = () => {
 useEffect(()=>{
   if(isEditMode){
     const fetchNote =async()=>{
+      try {
+    
     const res= await api.get(`/note/${id}`)
     setTitle(res.data.title)
-    setContent(res.data.content)}
+    setContent(res.data.content)
+
+      } catch (error) {
+        setError('Failed to load notes')
+      }
+    }
      fetchNote()
   }
  
@@ -78,7 +85,11 @@ className="border border-gray-600 bg-gray-800 rounded-lg
 
 <div className="flex gap-4"> 
 <button className="bg-red-500 px-4 py-2 rounded-xl"
-type="button">
+type="button"
+onClick={()=>{
+  navigate('/dashboard')
+}}
+>
   cancel
  </button>
 
