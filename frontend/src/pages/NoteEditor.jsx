@@ -42,7 +42,10 @@ useEffect(()=>{
       }
     }
      fetchNote()
-  
+     
+   return () => {
+      active = false
+    }
  
 },[id])
 
