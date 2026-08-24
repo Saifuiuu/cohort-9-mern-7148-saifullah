@@ -85,6 +85,8 @@ export const getNote =async (req, res)=>{
 
 export const updateNote= async(req,res)=>{
     try {
+
+       
         
         const {note,error} = await findUserNote(req.params.id, req.user._id);
 
@@ -101,17 +103,33 @@ export const updateNote= async(req,res)=>{
 
         const {title,content}= req.body??{}
 
-  if(title!==undefined&&
-    ( typeof title !== "string" ||title.trim()==="")){
+  
+if (title !== undefined) {
+  if (typeof title !== "string") {
     return res.status(400).json({
-        message:"Title cannot be empty"
+      message: "Title must be a non-empty string"
     });
+  }
+
+  if (title.trim() === "") {
+    return res.status(400).json({
+      message: "Title cannot be empty"
+    });
+  }
 }
-if(content!==undefined&&
-  ( typeof content !=="string" || content.trim()==="")){
+
+if (content !== undefined) {
+  if (typeof content !== "string") {
     return res.status(400).json({
-        message:"Content cannot be empty"
+      message: "Content must be a non-empty string"
     });
+  }
+
+  if (content.trim() === "") {
+    return res.status(400).json({
+      message: "Content cannot be empty"
+    });
+  }
 }
 
   if(title!==undefined){

@@ -7,7 +7,7 @@ const NoteEditor = () => {
     const [title,setTitle]=useState('')
     const [content,setContent]=useState('')
     const [error,setError]=useState('')
-    
+    const [loading,setLoading]=useState(false)
     const [saving,setSaving]=useState(false)
     const [loadError,setLoadError]=useState(false)
     const {id}=useParams();
@@ -18,23 +18,31 @@ useEffect(()=>{
   setLoadError(false)
   setError('')
 
-  if(id){
+  if(!id) return 
+  setLoading(true)
+  let active =true
+
     const fetchNote =async()=>{
       try {
-    
+    if(!active) return 
     const res= await api.get(`/note/${id}`)
     setTitle(res.data.title)
     setContent(res.data.content)
 
       } catch (error) {
+        if(!active) return 
       setError( error.response?.data?.message ||
         error.message ||
         "Failed to load notes")
         setLoadError(true)
       }
+      finally{
+        if(active){
+        setLoading(false)}
+      }
     }
      fetchNote()
-  }
+  
  
 },[id])
 
@@ -83,22 +91,29 @@ finally{
 {error && <p className="text-red-400">{error}</p>}
 
           <form onSubmit={handleSubmit} className="flex flex-col  gap-4  w-full max-w-2xl">
+<label htmlFor="title">Title</label>
 
-<input type="text" placeholder="Title"
-value={title}
-disabled={loadError}
-onChange={(e)=>{setTitle(e.target.value)}}
-className="border border-gray-600 rounded-lg px-4 py-3 w-full
- bg-gray-800 placeholder:text-gray-400 outline-none focus:ring-2" />
+<input
+  id="title"
+  name="title"
+  type="text"
+  placeholder="Title"
+  value={title}
+  disabled={loading || loadError}
+  onChange={(e) => setTitle(e.target.value)}
+  className="border border-gray-600 rounded-lg px-4 py-3 w-full bg-gray-800 placeholder:text-gray-400 outline-none focus:ring-2"
+/>
+<label htmlFor="content">Content</label>
 
-<textarea name="" id="" placeholder="Enter Content here"
-className="border border-gray-600 bg-gray-800 rounded-lg
- placeholder:text-gray-400 outline-none focus:ring-2
- min-h-[300px] p-5"
- value={content}
- disabled={loadError}
- onChange={(e)=>{setContent(e.target.value)}}
- ></textarea>
+<textarea
+  id="content"
+  name="content"
+  placeholder="Enter Content here"
+  value={content}
+  disabled={loading || loadError}
+  onChange={(e) => setContent(e.target.value)}
+  className="border border-gray-600 bg-gray-800 rounded-lg placeholder:text-gray-400 outline-none focus:ring-2 min-h-[300px] p-5"
+/>
 
 <div className="flex gap-4"> 
 <button className="bg-red-500 px-4 py-2 rounded-xl"
