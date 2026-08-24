@@ -25,7 +25,7 @@ try {
     navigate('/dashboard')
     
 } catch (err) {
-    setError(err.response?.data?.message || 'signup failed')
+    setError(err.message || 'signup failed')
 }
 finally{
     setLoading(false)

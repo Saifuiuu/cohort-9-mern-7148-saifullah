@@ -47,9 +47,8 @@ try {
   }
   navigate('/dashboard')
 } catch (error) {
-  setError(error.response?.data?.message||'error while saving note')
+  setError(error.message||'error while saving note')
 }
-
 
     }
     
@@ -99,18 +98,10 @@ onClick={()=>{
  </button>
  
  </div>
- 
-
 
 </form>
         </div>
-
-
-      
-
     </div>
-
-
 
   )
 }
