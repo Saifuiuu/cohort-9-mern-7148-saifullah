@@ -7,15 +7,18 @@ const NoteEditor = () => {
     const [title,setTitle]=useState('')
     const [content,setContent]=useState('')
     const [error,setError]=useState('')
-    const [loading,setLoading]=useState(false)
+    
     const [saving,setSaving]=useState(false)
     const [loadError,setLoadError]=useState(false)
     const {id}=useParams();
-    const isEditMode=Boolean(id)
+   
     const navigate = useNavigate()
 
 useEffect(()=>{
-  if(isEditMode){
+  setLoadError(false)
+  setError('')
+
+  if(id){
     const fetchNote =async()=>{
       try {
     
@@ -24,7 +27,9 @@ useEffect(()=>{
     setContent(res.data.content)
 
       } catch (error) {
-        setError('Failed to load notes')
+      setError( error.response?.data?.message ||
+        error.message ||
+        "Failed to load notes")
         setLoadError(true)
       }
     }
@@ -42,8 +47,8 @@ useEffect(()=>{
       setSaving(true)
 
 try {
-  setError('')
-  if(isEditMode){
+ 
+  if(id){
     await api.put(`/note/${id}`,{title,content})
   }
   else{
@@ -51,7 +56,9 @@ try {
   }
   navigate('/dashboard')
 } catch (error) {
-  setError(error.message||'error while saving note')
+  setError(error.response?.data?.message ||
+        error.message ||
+        'error while saving note')
 }
 finally{
   setSaving(false)
@@ -70,7 +77,7 @@ finally{
             }}>Back</button>
         </div>
         <div className="flex-1 flex flex-col items-center justify-center">
-          <h2 className="font-bold text-2xl">{isEditMode ? "Edit Note":"creating  a new  note"}</h2>
+          <h2 className="font-bold text-2xl">{id ? "Edit Note":"creating  a new  note"}</h2>
           <p className="text-gray-400 mt-2">Write down your thoughts and ideas</p>
 
 {error && <p className="text-red-400">{error}</p>}

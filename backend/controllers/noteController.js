@@ -66,7 +66,7 @@ export const getNote =async (req, res)=>{
   try {
     const {note,error} = await findUserNote(req.params.id, req.user._id);
     if (error === "Invalid id") {
-    return res.status(404).json({ message: "Invalid note id" });
+    return res.status(400).json({ message: "Invalid note id" });
 }
 
      if(error==='Not found') {
@@ -99,24 +99,26 @@ export const updateNote= async(req,res)=>{
   if(error==='Not authorize') {
       return res.status(403).json({message:' not authorized to update this note'});}
 
-        
+        const {title,content}= req.body??{}
 
-  if(req.body.title!==undefined&&req.body.title.trim()===""){
+  if(title!==undefined&&
+    ( typeof title !== "string" ||title.trim()==="")){
     return res.status(400).json({
         message:"Title cannot be empty"
     });
 }
-if(req.body.content!==undefined&&req.body.content.trim()===""){
+if(content!==undefined&&
+  ( typeof content !=="string" || content.trim()==="")){
     return res.status(400).json({
         message:"Content cannot be empty"
     });
 }
 
-  if(req.body.title!==undefined){
-    note.title = req.body.title;}
+  if(title!==undefined){
+    note.title = title;}
 
-  if(req.body.content!==undefined){
-    note.content = req.body.content;}
+  if(content!==undefined){
+    note.content =content;}
 
     const updatedNote=await note.save()
 
