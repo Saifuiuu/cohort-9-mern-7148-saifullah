@@ -8,6 +8,8 @@ const NoteEditor = () => {
     const [content,setContent]=useState('')
     const [error,setError]=useState('')
     const [loading,setLoading]=useState(false)
+    const [saving,setSaving]=useState(false)
+    const [loadError,setLoadError]=useState(false)
     const {id}=useParams();
     const isEditMode=Boolean(id)
     const navigate = useNavigate()
@@ -23,6 +25,7 @@ useEffect(()=>{
 
       } catch (error) {
         setError('Failed to load notes')
+        setLoadError(true)
       }
     }
      fetchNote()
@@ -36,6 +39,7 @@ useEffect(()=>{
 
       e.preventDefault()
       setError('')
+      setSaving(true)
 
 try {
   setError('')
@@ -48,6 +52,9 @@ try {
   navigate('/dashboard')
 } catch (error) {
   setError(error.message||'error while saving note')
+}
+finally{
+  setSaving(false)
 }
 
     }
@@ -66,10 +73,13 @@ try {
           <h2 className="font-bold text-2xl">{isEditMode ? "Edit Note":"creating  a new  note"}</h2>
           <p className="text-gray-400 mt-2">Write down your thoughts and ideas</p>
 
+{error && <p className="text-red-400">{error}</p>}
+
           <form onSubmit={handleSubmit} className="flex flex-col  gap-4  w-full max-w-2xl">
 
 <input type="text" placeholder="Title"
 value={title}
+disabled={loadError}
 onChange={(e)=>{setTitle(e.target.value)}}
 className="border border-gray-600 rounded-lg px-4 py-3 w-full
  bg-gray-800 placeholder:text-gray-400 outline-none focus:ring-2" />
@@ -79,6 +89,7 @@ className="border border-gray-600 bg-gray-800 rounded-lg
  placeholder:text-gray-400 outline-none focus:ring-2
  min-h-[300px] p-5"
  value={content}
+ disabled={loadError}
  onChange={(e)=>{setContent(e.target.value)}}
  ></textarea>
 
@@ -93,8 +104,9 @@ onClick={()=>{
  </button>
 
    <button className="bg-blue-500 px-4 py-2 rounded-xl"
-  type="submit">
-  save
+  type="submit"
+  disabled={saving||loadError}>
+  {saving? 'Saving..':'Save'}
  </button>
  
  </div>

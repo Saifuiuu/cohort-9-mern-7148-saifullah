@@ -18,7 +18,7 @@ const signup=async(name,email,password)=>{
     return res.data
 
   } catch (error) {
-    throw new Error(error.message || "Signup failed")
+    throw new Error(error.response?.data?.message||error.message||"signup failed")
   }
   
 }
@@ -31,7 +31,7 @@ const signup=async(name,email,password)=>{
     return res.data
 
     } catch (error) {
-        throw new Error(error.message||"Login failed")
+        throw new Error(error.response?.data?.message||error.message||"Login failed")
     }
       
 }
@@ -43,7 +43,7 @@ try {
     setUser(null)
 
 } catch (error) {
-    throw new Error(error.message || "Logout failed")
+    throw new Error(error.response?.data?.message||error.message||"Logout failed")
 }
    
 }

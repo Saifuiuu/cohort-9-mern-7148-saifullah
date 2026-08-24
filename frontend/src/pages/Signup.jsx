@@ -49,7 +49,8 @@ finally{
     {error && <p style={{color:'red'}}>{error}</p>}
 
 
- <button>Signup</button>
+ <button disabled={loading}>
+  {loading?'signing up..':'Signup'}  </button>
 
  </form>
  </div>

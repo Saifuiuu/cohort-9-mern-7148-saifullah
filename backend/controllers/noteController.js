@@ -68,9 +68,6 @@ export const getNote =async (req, res)=>{
     if (error === "Invalid id") {
     return res.status(404).json({ message: "Invalid note id" });
 }
-if (error === "Not found") {
-    return res.status(404).json({ message: "Note not found" });
-}
 
      if(error==='Not found') {
       return res.status(404).json({message:'Note not found'});}
@@ -92,7 +89,7 @@ export const updateNote= async(req,res)=>{
         const {note,error} = await findUserNote(req.params.id, req.user._id);
 
         if (error === "Invalid id") {
-    return res.status(404).json({ message: "Invalid note id" });
+    return res.status(400).json({ message: "Invalid note id" });
 }
 
 
@@ -102,14 +99,9 @@ export const updateNote= async(req,res)=>{
   if(error==='Not authorize') {
       return res.status(403).json({message:' not authorized to update this note'});}
 
-    
-        if(req.body.title!==undefined){
-    note.title = req.body.title;}
+        
 
-if(req.body.content!==undefined){
-    note.content = req.body.content;}
-
-if(req.body.title!==undefined&&req.body.title.trim()===""){
+  if(req.body.title!==undefined&&req.body.title.trim()===""){
     return res.status(400).json({
         message:"Title cannot be empty"
     });
@@ -120,9 +112,13 @@ if(req.body.content!==undefined&&req.body.content.trim()===""){
     });
 }
 
+  if(req.body.title!==undefined){
+    note.title = req.body.title;}
 
+  if(req.body.content!==undefined){
+    note.content = req.body.content;}
 
-        const updatedNote=await note.save()
+    const updatedNote=await note.save()
 
         logger.info(`Updated noted id:${note._id}`)
         res.status(200).json(updatedNote)
@@ -138,7 +134,7 @@ export const deleteNote= async(req,res)=>{
     try {
         const {note,error} = await findUserNote(req.params.id, req.user._id);
         if (error === "Invalid id") {
-    return res.status(404).json({ message: "Invalid note id" });
+    return res.status(400).json({ message: "Invalid note id" });
 }
 
      if(error==='Not found') {
