@@ -65,14 +65,14 @@ noteId=res.data._id;
 it("should not create note without login ", async()=>{
 
   const res=  await api.post('/api/note',{
-        name:"test note",
+        title:"test note",
         content:"test note content"
     })
 
     expect(res.status).to.equal(401);
 })
 
-it("should not create note without name",async()=>{
+it("should not create note with mising title",async()=>{
   const res=  await api.post('/api/note',{
         content:"this is content for note"
     },{headers:{Cookie:cookie}})
@@ -118,7 +118,7 @@ describe('Get /api/note/:id',()=>{
 const res=await api.get(`/api/note/${fakeId}`,{headers:{Cookie:cookie}})
 
 
-expect(res.status).to.equal(404)
+expect(res.status).to.equal(400)
     })
 
     })
@@ -134,6 +134,52 @@ const res= await api.put(`/api/note/${noteId}`,{
 expect(res.status).to.equal(200)
 expect(res.data).to.have.property("content","new content")
 
+})
+
+it("should return 400 when updating with fake id",async()=>{
+  const fakeId = "234te23"
+  const res = await api.put(
+    `/api/note/${fakeId}`,
+    {
+      title: "updated title",
+      content: "updated content"
+    },
+    {
+      headers:{Cookie:cookie}
+    })
+  expect(res.status).to.equal(400)
+})
+
+it("should not update note when title is not a string",async()=>{
+  const res=await api.put(
+    `/api/note/${noteId}`,
+    {
+      title: 123
+    },
+    {
+      headers:{Cookie:cookie }
+    })
+  expect(res.status).to.equal(400)
+  expect(res.data.message).to.equal(
+    "Title must be a non-empty string"
+  )
+})
+
+
+it("should not update note when content is not a string",async()=>{
+  const res=await api.put(
+    `/api/note/${noteId}`,
+    {
+      content:123
+    },
+    {
+      headers:{Cookie:cookie}
+    }
+  )
+  expect(res.status).to.equal(400)
+  expect(res.data.message).to.equal(
+    "Content must be a non-empty string"
+  )
 })
 
     })
@@ -153,6 +199,17 @@ expect(res.data).to.have.property("content","new content")
 
             expect(res.status).to.equal(404)
         })
+
+
+        it("should return 400 when deleting with fake id",async()=>{
+  const fakeId="234te23"
+  const res=await api.delete(
+    `/api/note/${fakeId}`,
+    {
+      headers:{Cookie:cookie }
+    })
+  expect(res.status).to.equal(400)
+})
     })
 
 })

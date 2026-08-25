@@ -12,6 +12,7 @@ export const genToken = (id) => {
 
 export const signup = async (req, res) => {
   try {
+    console.log("function called")
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
@@ -56,8 +57,10 @@ export const login = async (req, res) => {
     }
 
     const user = await User.findOne({ email: email.toLowerCase() });
-if(!user){
-return res.status(401).json({ message: "user Not found" });
+
+  if(!user){
+  return res.status(401).json({ message: "user Not found" });
+
 }
     const isMatched = await user.matchPassword(password);
 
