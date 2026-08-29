@@ -3,6 +3,7 @@ import {useNavigate,useParams} from "react-router-dom"
 import api from "../services/axios"
 import toast from "react-hot-toast"
 import ReactQuill from "react-quill-new"
+import "react-quill-new/dist/quill.snow.css"
 const NoteEditor=()=>{
 const [title,setTitle]=useState('')
 const [content,setContent]=useState('')
@@ -19,21 +20,16 @@ if(!id)return
 setLoading(true)
 let active=true
 const fetchNote=async()=>{
-
-  try{
-
-  if(!active)return
+try{
+if(!active)return
 const res=await api.get(`/note/${id}`)
-  setTitle(res.data.title)
- setContent(res.data.content)} 
-
- catch(error){
-
- if(!active)return
+setTitle(res.data.title)
+setContent(res.data.content)
+}catch(error){
+if(!active)return
 setError(error.response?.data?.message||error.message||"Failed to load notes")
- setLoadError(true)}
-
-finally{
+setLoadError(true)
+}finally{
 if(active){setLoading(false)}
 }
 }
@@ -45,16 +41,12 @@ e.preventDefault()
 setError('')
 setSaving(true)
 try{
-
- if(id){
+if(id){
 await api.put(`/note/${id}`,{title,content})
 toast.success('Note updated successfully')
-}
-else{
-
+}else{
 await api.post('/note',{title,content})
 toast.success('Note created successfully')
-
 }
 navigate('/dashboard')
 }catch(error){
