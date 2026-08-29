@@ -1,141 +1,132 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import Login from "./Login";
-import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import {render,screen,fireEvent,waitFor} from "@testing-library/react"
+import Login from "./Login"
+import {useAuth} from "../context/AuthContext"
+import {useNavigate} from "react-router-dom"
 
-jest.mock("../context/AuthContext", () => ({
-  useAuth: jest.fn(),
-}));
+jest.mock("../context/AuthContext",()=>({
+  useAuth:jest.fn(),
+}))
 
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router-dom",()=>({
   ...jest.requireActual("react-router-dom"),
-  useNavigate: jest.fn(),
-}));
+  useNavigate:jest.fn(),
+}))
 
-describe("Login", () => {
-  const mockLogin = jest.fn();
-  const mockNavigate = jest.fn();
+describe("Login",()=>{
+  const mockLogin=jest.fn()
+  const mockNavigate=jest.fn()
 
-  beforeEach(() => {
-    jest.clearAllMocks();
+  beforeEach(()=>{
+    jest.clearAllMocks()
 
     useAuth.mockReturnValue({
-      login: mockLogin,
-    });
+      login:mockLogin,
+    })
 
-    useNavigate.mockReturnValue(mockNavigate);
-  });
+    useNavigate.mockReturnValue(mockNavigate)
+  })
 
-  test("shows login form", () => {
-    render(<Login />);
-
-    expect(
-      screen.getByRole("heading", { name: "Login" })
-    ).toBeInTheDocument();
+  test("shows login form",()=>{
+    render(<Login/>)
 
     expect(
-      screen.getByPlaceholderText("Enter your Email")
-    ).toBeInTheDocument();
+      screen.getByRole("heading",{name:"Welcome back"})
+    ).toBeInTheDocument()
 
     expect(
-      screen.getByPlaceholderText("Enter your password")
-    ).toBeInTheDocument();
+      screen.getByPlaceholderText("you@example.com")
+    ).toBeInTheDocument()
 
     expect(
-      screen.getByRole("button", { name: "Login" })
-    ).toBeInTheDocument();
-  });
+      screen.getByPlaceholderText("••••••••")
+    ).toBeInTheDocument()
 
-  test("allows user to enter email and password", () => {
-    render(<Login />);
+    expect(
+      screen.getByRole("button",{name:"Login"})
+    ).toBeInTheDocument()
+  })
 
-    const emailInput = screen.getByPlaceholderText("Enter your Email");
-    const passwordInput = screen.getByPlaceholderText("Enter your password");
+  test("allows user to enter email and password",()=>{
+    render(<Login/>)
 
-    fireEvent.change(emailInput, {
-      target: { value: "saif@gmail.com" },
-    });
+    const emailInput=screen.getByPlaceholderText("you@example.com")
+    const passwordInput=screen.getByPlaceholderText("••••••••")
 
-    fireEvent.change(passwordInput, {
-      target: { value: "12345" },
-    });
+    fireEvent.change(emailInput,{
+      target:{value:"saif@gmail.com"},
+    })
 
-    expect(emailInput).toHaveValue("saif@gmail.com");
-    expect(passwordInput).toHaveValue("12345");
-  });
+    fireEvent.change(passwordInput,{
+      target:{value:"12345"},
+    })
 
-  test("calls login and navigates to dashboard on successful login", async () => {
-    mockLogin.mockResolvedValue({});
+    expect(emailInput).toHaveValue("saif@gmail.com")
+    expect(passwordInput).toHaveValue("12345")
+  })
 
-    render(<Login />);
+  test("calls login and navigates to dashboard on successful login",async()=>{
+    mockLogin.mockResolvedValue({})
+
+    render(<Login/>)
 
     fireEvent.change(
-      screen.getByPlaceholderText("Enter your Email"),
-      {
-        target: { value: "saif@gmail.com" },
-      }
-    );
+      screen.getByPlaceholderText("you@example.com"),
+      {target:{value:"saif@gmail.com"}}
+    )
 
     fireEvent.change(
-      screen.getByPlaceholderText("Enter your password"),
-      {
-        target: { value: "12345" },
-      }
-    );
+      screen.getByPlaceholderText("••••••••"),
+      {target:{value:"12345"}}
+    )
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Login" })
-    );
+      screen.getByRole("button",{name:"Login"})
+    )
 
-    await waitFor(() => {
+    await waitFor(()=>{
       expect(mockLogin).toHaveBeenCalledWith(
         "saif@gmail.com",
         "12345"
-      );
-    });
+      )
+    })
 
-    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
-  });
+    expect(mockNavigate).toHaveBeenCalledWith("/dashboard")
+  })
 
-  test("shows error when login fails", async () => {
+  test("shows error when login fails",async()=>{
     mockLogin.mockRejectedValue(
       new Error("Invalid credentials")
-    );
+    )
 
-    render(<Login />);
-
-    fireEvent.change(
-      screen.getByPlaceholderText("Enter your Email"),
-      {
-        target: { value: "saif@gmail.com" },
-      }
-    );
+    render(<Login/>)
 
     fireEvent.change(
-      screen.getByPlaceholderText("Enter your password"),
-      {
-        target: { value: "wrong" },
-      }
-    );
+      screen.getByPlaceholderText("you@example.com"),
+      {target:{value:"saif@gmail.com"}}
+    )
+
+    fireEvent.change(
+      screen.getByPlaceholderText("••••••••"),
+      {target:{value:"wrong"}}
+    )
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Login" })
-    );
+      screen.getByRole("button",{name:"Login"})
+    )
 
     expect(
       await screen.findByText("Invalid credentials")
-    ).toBeInTheDocument();
+    ).toBeInTheDocument()
 
-    expect(mockNavigate).not.toHaveBeenCalledWith("/dashboard");
-  });
+    expect(mockNavigate).not.toHaveBeenCalledWith("/dashboard")
+  })
 
-  test("navigates to signup when signup button is clicked", () => {
-    render(<Login />);
+  test("navigate to signup when we click signup button",()=>{
+    render(<Login/>)
 
     fireEvent.click(
-      screen.getByRole("button", { name: "signup" })
-    );
+      screen.getByRole("button",{name:"Sign up"}) )
 
-    expect(mockNavigate).toHaveBeenCalledWith("/signup");
-  });
-});
+    expect(mockNavigate).toHaveBeenCalledWith("/signup")
+  })
+})
