@@ -19,6 +19,10 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: "All fields are Required!" });
     }
 
+    if(password.length<8){
+      return res.status(400).json({ message: "Password must be at least 8 characters long" });
+    }
+
     const findUser = await User.findOne({ email: email.toLowerCase() });
 
     if (findUser) {
@@ -55,6 +59,7 @@ export const login = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ message: "all fields are required" });
     }
+
 
     const user = await User.findOne({ email: email.toLowerCase() });
 

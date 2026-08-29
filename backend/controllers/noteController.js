@@ -10,9 +10,9 @@ const findUserNote =async(noteId,userId)=>{
         return {error: "Invalid id"};
     }
 
-    const note = await Note.findById(noteId);
-    if (!note) {
-      return { error: 'Not found' };}
+    const note =await Note.findById(noteId);
+    if(!note){
+      return {error:'not found'};}
 
     if (note.user.toString()!==userId.toString()){
       return{ error:'Not authorize' }}
@@ -51,7 +51,21 @@ export const createNote = async (req, res) => {
 
 export const getAllNotes = async (req, res) => {
   try {
-    const notes = await Note.find({ user: req.user._id }).sort({
+
+    const{search}=req.query
+    const filter ={
+      user:req.user._id}
+
+    if(search && search.trim()!=""){
+      filter.$or=[
+        {title:{$regex:search.trim(),$options:"i"}},
+        {content:{$regex:search.trim(),$options:"i"}}
+      ]
+    }
+
+
+
+    const notes = await Note.find(filter).sort({
       createdAt: -1,
     });
 

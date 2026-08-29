@@ -8,18 +8,23 @@ const Dashboard = () => {
 
 const [loading,setLoading]=useState(false)
 const [notes,setNotes]=useState([])
+const [search,setSearch]=useState('')
 const [error,setError]=useState('')
 const {logout,user}=useAuth()
 const navigate=useNavigate()
 
 
 
-const fetchnotes=async()=>{
+const fetchnotes=async(searchTerm='')=>{
  setLoading(true)
  setError('')
  try {
   
- const res= await api.get('/note')
+ const res= await api.get('/note',{
+  params:{
+    search:searchTerm
+  }
+ })
   setNotes(res.data)
 
  } catch (error) {
@@ -30,8 +35,11 @@ const fetchnotes=async()=>{
  }
 }
 useEffect(()=>{
-  fetchnotes()
-},[])
+  const timer=  setTimeout(()=>{fetchnotes(search)},300) 
+return ()=> clearTimeout(timer)
+
+  
+},[search])
 
 
 const handleDelete=async(id)=>{
@@ -83,6 +91,17 @@ if (loading) {
         Capture your thoughts and ideas
       </p>
     </div>
+
+
+
+<div className=' mx-w-xl flex gap-3'>
+  <input   type='text' value={search} placeholder='Search notes..'
+  onChange={(e)=>{setSearch(e.target.value)}}  
+  className=' py-2 px-4 bg-slate-900 text-white border border-slate-800 rounded-xl outline-none
+   focus:border-indigo-50 transition'/>
+   
+</div>
+
 
      <button
     onClick={() => navigate('/note/new')}
