@@ -20,6 +20,8 @@ describe("AuthContext",()=>{
   });
 
   test("should load user profile",async()=>{
+    try {
+   
     api.get.mockResolvedValue({
       data:{
         user:{
@@ -44,6 +46,10 @@ describe("AuthContext",()=>{
     })
 
     expect(api.get).toHaveBeenCalledWith("/auth/profile");
+       
+    } catch (error) {
+      throw new Error(`test faild ${error.message}`)
+    }
   })
 
   test("set user to null when the profile request fail",async()=>{

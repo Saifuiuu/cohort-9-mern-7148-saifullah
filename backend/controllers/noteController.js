@@ -53,11 +53,14 @@ export const getAllNotes=async(req,res)=>{
     const{search}=req.query
     const filter ={
       user:req.user._id}
+    
+
+    if(search && search.trim()!=""){
+
     const escaperegex=(str)=>str.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
     const trimsearch=search.trim().slice(0,100)
     const safesearch=escaperegex(trimsearch)
 
-    if(search && search.trim()!=""){
       filter.$or=[
         {title:{$regex:safesearch,$options:"i"}},
         {content:{$regex:safesearch,$options:"i"}}

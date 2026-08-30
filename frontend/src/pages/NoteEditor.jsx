@@ -90,8 +90,9 @@ return(
 
 <ReactQuill theme="snow" value={content} onChange={setContent} modules={modules}
 placeholder="Enter your content here..."
-readOnly={loadError||loading}
-className="min-h-[300px] text-black"/>
+readOnly={loadError||loading} id="content"
+className="min-h-[300px] text-black"
+/>
 </div>
 <div className="flex gap-4">
 <button type="button" onClick={()=>navigate('/dashboard')}

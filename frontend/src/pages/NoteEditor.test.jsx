@@ -33,17 +33,18 @@ jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
   useParams: jest.fn(),
 }));
-jest.mock("react-quill-new", () => ({
+jest.mock("react-quill-new",()=>({
   __esModule:true,
-  default:({value,onChange,placeholder }) => (
+  default:({value,onChange,placeholder,id})=>(
     <textarea
+      id={id}
       data-testid="quill-editor"
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}/>),
 }))
 
-describe("NoteEditor", () => {
+describe("NoteEditor",()=>{
   beforeEach(() => {
     jest.clearAllMocks()
 

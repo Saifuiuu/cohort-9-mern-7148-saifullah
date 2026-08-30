@@ -51,11 +51,12 @@ return ()=> clearTimeout(timer)
 const handleDelete=async(id)=>{
   setLoading(true)
   setError('')
+  searchRequestId.current++;
   try {
     await api.delete(`/note/${id}`)
-    setNotes(notes.filter(note=>
-      note._id!==id
-    ))
+    
+
+     setNotes((prevNotes)=>prevNotes.filter((note)=>note._id!== id))
     toast.success("Note deleted successfully")
   } catch (error) {
     toast.error(error.response?.data?.message||"failed to delete note")
