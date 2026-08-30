@@ -54,7 +54,7 @@ const handleDelete=async(id)=>{
   setError('')
   searchRequestId.current++
    clearTimeout(debounceTimer.current)
-   
+
   try {
     await api.delete(`/note/${id}`)
     
@@ -106,7 +106,7 @@ if (loading) {
 
 <div className=' mx-w-xl flex gap-3'>
   <input   type='text' value={search} placeholder='Search notes..'
-  onChange={(e)=>{setSearch(e.target.value)}}  
+  onChange={(e)=>{setSearch(e.target.value)}}  aria-label="Search notes"
   className=' py-2 px-4 bg-slate-900 text-white border border-slate-800 rounded-xl outline-none
    focus:border-indigo-50 transition'/>
    
