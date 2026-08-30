@@ -4,6 +4,8 @@ import api from '../services/axios'
 import { useNavigate } from 'react-router-dom'
 import { Pencil,Trash2,Plus} from 'lucide-react'
 import toast from 'react-hot-toast'
+
+
 const Dashboard = () => {
 
 const [loading,setLoading]=useState(false)
@@ -13,8 +15,7 @@ const [error,setError]=useState('')
 const {logout,user}=useAuth()
 const navigate=useNavigate()
 const searchRequestId=useRef(0)
-
-
+const debounceTimer= useRef(null)
 
 const fetchnotes=async(searchTerm='',requestId)=>{
  setLoading(true)
@@ -43,7 +44,7 @@ useEffect(()=>{
   const currentRequestId=++searchRequestId.current
   const timer=  setTimeout(()=>{
     fetchnotes(search,currentRequestId)},300) 
-return ()=> clearTimeout(timer)
+return ()=> clearTimeout(timer,debounceTimer.current)
   
 },[search])
 
@@ -51,7 +52,9 @@ return ()=> clearTimeout(timer)
 const handleDelete=async(id)=>{
   setLoading(true)
   setError('')
-  searchRequestId.current++;
+  searchRequestId.current++
+   clearTimeout(debounceTimer.current)
+   
   try {
     await api.delete(`/note/${id}`)
     

@@ -55,7 +55,7 @@ export const getAllNotes=async(req,res)=>{
       user:req.user._id}
     
 
-    if(search && search.trim()!=""){
+    if(search && typeof search === "string" && search.trim()!=""){
 
     const escaperegex=(str)=>str.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
     const trimsearch=search.trim().slice(0,100)
@@ -132,7 +132,7 @@ if (title !== undefined) {
 if (content!==undefined){
   if (typeof content!=="string"){
     return res.status(400).json({
-      message: "Content must be a not empty string"
+      message: "Content must be a non-empty string"
     })
   }
 
