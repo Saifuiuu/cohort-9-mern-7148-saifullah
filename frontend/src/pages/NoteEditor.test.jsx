@@ -34,34 +34,31 @@ jest.mock("react-router-dom", () => ({
   useParams: jest.fn(),
 }));
 jest.mock("react-quill-new", () => ({
-  __esModule: true,
-  default: ({ value, onChange, placeholder }) => (
+  __esModule:true,
+  default:({value,onChange,placeholder }) => (
     <textarea
       data-testid="quill-editor"
       placeholder={placeholder}
       value={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
-  ),
-}));
+      onChange={(e) => onChange(e.target.value)}/>),
+}))
 
 describe("NoteEditor", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
 
     useNavigate.mockReturnValue(mockNavigate);
 
     useParams.mockReturnValue({
       id: undefined,
-    });
-  });
+    })
+  })
 
+  test("renders create note form",()=>{
 
-  test("renders create note form", () => {
-    render(<NoteEditor />);
-
+    render(<NoteEditor />)
     expect(
-      screen.getByRole("heading", {
+      screen.getByRole("heading",{
         name: "creating a new note",
       })
     ).toBeInTheDocument();
@@ -88,19 +85,18 @@ describe("NoteEditor", () => {
   });
 
 
-  test("allows user to enter title and content", () => {
-    render(<NoteEditor />);
+  test("allows user to enter title and content",()=>{
+    render(<NoteEditor/>);
 
-    const titleInput = screen.getByLabelText("Title");
+    const titleInput=screen.getByLabelText("Title");
 
     const contentInput =
       screen.getByTestId("quill-editor");
 
-    fireEvent.change(titleInput, {
+    fireEvent.change(titleInput,{
       target: {
-        value: "My first note",
-      },
-    });
+        value: "My first note", },
+    })
 
     fireEvent.change(contentInput, {
       target: {
@@ -116,7 +112,8 @@ describe("NoteEditor", () => {
   });
 
   test("creates a new note successfully", async () => {
-    api.post.mockResolvedValue({
+    try {
+       api.post.mockResolvedValue({
       data: {
         message: "Note created successfully",
       },
@@ -161,11 +158,15 @@ describe("NoteEditor", () => {
     expect(mockNavigate).toHaveBeenCalledWith(
       "/dashboard"
     );
-  });
+  
+    } catch (error) {
+      throw new Error(`test faild ${error.message}`)
+    }})
+   
 
-
-  test("shows error when creating note fails", async () => {
-    api.post.mockRejectedValue({
+  test("shows error when creating note fails",async()=>{
+try {
+  api.post.mockRejectedValue({
       response: {
         data: {
           message: "Failed to create note",
@@ -196,68 +197,63 @@ describe("NoteEditor", () => {
     fireEvent.click(
       screen.getByRole("button", {
         name: "Create Note",
-      })
-    );
+      }))
 
     expect(
       await screen.findByText(
-        "Failed to create note"
-      )
+        "Failed to create note")
     ).toBeInTheDocument();
 
     expect(mockNavigate).not.toHaveBeenCalledWith(
-      "/dashboard"
-    );
-  });
+      "/dashboard")
+
+} catch (error) {
+  throw new Error(`test faild ${error.message}`)
+}})
 
 
-  test("loads existing note in edit mode", async () => {
+  test("loads existing note in edit mode",async()=>{
+    try {
     useParams.mockReturnValue({
-      id: "123",
-    });
+      id: "123",})
 
     api.get.mockResolvedValue({
       data: {
         title: "Existing Note",
-        content: "Existing note content",
-      },
-    });
+        content: "Existing note content", },
+    })
 
-    render(<NoteEditor />);
-
+    render(<NoteEditor />)
     expect(
       await screen.findByDisplayValue("Existing Note")
-    ).toBeInTheDocument();
-
+    ).toBeInTheDocument()
     expect(
       screen.getByTestId("quill-editor")
-    ).toHaveValue("Existing note content");
-
+    ).toHaveValue("Existing note content")
     expect(api.get).toHaveBeenCalledWith(
-      "/note/123"
-    );
+      "/note/123")
 
     expect(
       screen.getByRole("heading", {
         name: "Edit Note",
       })
-    ).toBeInTheDocument();
-  });
+    ).toBeInTheDocument()  
+    } catch (error) {
+      throw new Error(`test faild ${error.message}`)}
+  })
 
-  test("shows error when existing note cannot be loaded", async () => {
+  test("shows error when existing note cannot be loaded",async()=>{
+    try {   
     useParams.mockReturnValue({
-      id: "123",
-    });
+      id: "123",})
 
     api.get.mockRejectedValue({
-      response: {
-        data: {
-          message: "Note not found",
-        },
-      },
-    });
+      response:{
+        data:{
+          message: "Note not found", },
+           },})
 
-    render(<NoteEditor />);
+    render(<NoteEditor />)
 
     expect(
       await screen.findByText("Note not found")
@@ -272,105 +268,105 @@ describe("NoteEditor", () => {
         name: "Update Note",
       })
     ).toBeDisabled();
-  });
+  
+    } catch (error) {
+      throw new Error(`test faild ${error.message}`)
+    }
+    });
 
-  test("updates existing note successfully", async () => {
+  test("updates existing note successfully",async()=>{
+    try {
     useParams.mockReturnValue({
       id: "123",
-    });
+    })
 
     api.get.mockResolvedValue({
       data: {
         title: "Old title",
         content: "Old content",
-      },
-    });
+      },})
 
     api.put.mockResolvedValue({
       data: {
         message: "Note updated successfully",
-      },
-    });
+      },})
 
-    render(<NoteEditor />);
+    render(<NoteEditor />)
 
     const titleInput =
       await screen.findByDisplayValue("Old title");
 
     const contentInput =
-      screen.getByTestId("quill-editor");
+      screen.getByTestId("quill-editor")
 
     fireEvent.change(titleInput, {
       target: {
         value: "Updated title",
-      },
-    });
+      },})
 
     fireEvent.change(contentInput, {
       target: {
         value: "Updated content",
-      },
-    });
+      },})
 
     fireEvent.click(
-      screen.getByRole("button", {
+      screen.getByRole("button",{
         name: "Update Note",
-      })
-    );
+      }))
 
-    await waitFor(() => {
+    await waitFor(()=>{
       expect(api.put).toHaveBeenCalledWith(
         "/note/123",
         {
           title: "Updated title",
           content: "Updated content",
-        }
-      );
-    });
+        })})
 
     expect(mockNavigate).toHaveBeenCalledWith(
-      "/dashboard"
-    );
-  });
+      "/dashboard" )
+} catch (error) {
+       throw new Error(`test faild ${error.message}`)
+    }})
 
-  test("shows error when updating note fails", async () => {
+  test("shows error when updating note fails",async()=>{
+
+    try {
+      
     useParams.mockReturnValue({
-      id: "123",
-    });
+      id: "123",})
 
     api.get.mockResolvedValue({
       data: {
         title: "Old title",
         content: "Old content",
-      },
-    });
+      },})
 
     api.put.mockRejectedValue({
-      response: {
-        data: {
-          message: "Failed to update note",
-        },
-      },
-    });
+      response:{
+        data:{
+          message:"Failed to update note",
+        },},
+    })
 
-    render(<NoteEditor />);
+    render(<NoteEditor />)
 
-    await screen.findByDisplayValue("Old title");
+    await screen.findByDisplayValue("Old title")
 
     fireEvent.click(
       screen.getByRole("button", {
         name: "Update Note",
-      })
-    );
+      }))
 
     expect(
       await screen.findByText(
         "Failed to update note"
       )
-    ).toBeInTheDocument();
+    ).toBeInTheDocument()
 
     expect(mockNavigate).not.toHaveBeenCalledWith(
       "/dashboard"
-    );
-  });
-});
+    )} 
+    catch (error) {
+       throw new Error(`test faild ${error.message}`)}
+    })
+})

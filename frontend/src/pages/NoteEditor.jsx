@@ -13,19 +13,24 @@ const [saving,setSaving]=useState(false)
 const [loadError,setLoadError]=useState(false)
 const {id}=useParams()
 const navigate=useNavigate()
-useEffect(()=>{
-setLoadError(false)
-setError('')
-if(!id)return
-setLoading(true)
-let active=true
-const fetchNote=async()=>{
-try{
-if(!active)return
+
+   useEffect(()=>{
+     setLoadError(false)
+      setError('')
+      if(!id)return
+     setLoading(true)
+
+      let active=true
+    const fetchNote=async()=>{
+   try{
+   if(!active)return
+
 const res=await api.get(`/note/${id}`)
-setTitle(res.data.title)
-setContent(res.data.content)
-}catch(error){
+
+ setTitle(res.data.title)
+ setContent(res.data.content)}
+ 
+catch(error){
 if(!active)return
 setError(error.response?.data?.message||error.message||"Failed to load notes")
 setLoadError(true)
@@ -72,27 +77,27 @@ return(
 <p className="text-gray-400 mt-2">Write down your thoughts and ideas</p>
 {error&&<p className="text-red-400">{error}</p>}
 <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-2xl">
-<label htmlFor="title">Title</label>
-<input
-id="title"
-name="title"
-type="text"
-placeholder="Title"
-value={title}
-disabled={loading||loadError}
-onChange={(e)=>setTitle(e.target.value)}
-className="border border-gray-600 rounded-lg px-4 py-3 w-full bg-gray-800 placeholder:text-gray-400 outline-none focus:ring-2"
-/>
+ <label htmlFor="title">Title</label>
+  <input id="title" name="title" type="text" placeholder="Title"
+   value={title} disabled={loading||loadError}
+    onChange={(e)=>setTitle(e.target.value)}
+    className="border border-gray-600 rounded-lg px-4 py-3 w-full bg-gray-800
+ placeholder:text-gray-400 outline-none focus:ring-2"/>
+
 <label htmlFor="content">Content</label>
+
 <div className="bg-white text-black rounded-lg overflow-hidden">
+
 <ReactQuill theme="snow" value={content} onChange={setContent} modules={modules}
-placeholder="Enter your content here..." className="min-h-[300px] text-black"/>
+placeholder="Enter your content here..."
+readOnly={loadError||loading}
+className="min-h-[300px] text-black"/>
 </div>
 <div className="flex gap-4">
 <button type="button" onClick={()=>navigate('/dashboard')}
 className="px-5 py-2.5 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white transition">
 Cancel</button>
-<button type="submit" disabled={saving||loadError}
+<button type="submit" disabled={saving||loadError||loading}
 className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition disabled:opacity-50 disabled:cursor-not-allowed">
 {saving?"Saving...":id?"Update Note":"Create Note"}</button>
 </div>
