@@ -1,0 +1,6 @@
+projectKey=notes-app-backend
+serverUrl=http://localhost:9000
+serverVersion=26.8.0.126808
+dashboardUrl=http://localhost:9000/dashboard?id=notes-app-backend
+ceTaskId=b20cf55d-ecd7-4874-ade5-e58411cbb058
+ceTaskUrl=http://localhost:9000/api/ce/task?id=b20cf55d-ecd7-4874-ade5-e58411cbb058
