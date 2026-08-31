@@ -10,35 +10,33 @@ const findUserNote =async(noteId,userId)=>{
         return {error: "Invalid id"};
     }
 
-    const note = await Note.findById(noteId);
-    if (!note) {
-      return { error: 'Not found' };}
+    const note =await Note.findById(noteId);
+    if(!note){
+      return {error:'Not found'};}
 
     if (note.user.toString()!==userId.toString()){
-      return{ error:'Not authorize' }}
+      return{ error:'Not authorize'}}
     return { note };}
     catch(error){
       logger.error(`FinduserNOte Error:${error}`)
       throw error;
     }
-};
+}
 
-
-
-export const createNote = async (req, res) => {
+export const createNote=async(req,res)=>{
   try {
-    const { title, content } = req.body;
+    const {title,content}=req.body;
 
-    if (!title || !content) {
+    if (!title||!content){
       return res
         .status(400)
         .json({ message: "Title and Content both are required " });
     }
 
-    const note = await Note.create({
+    const note=await Note.create({
       title,
       content,
-      user: req.user._id,
+      user:req.user._id,
     });
 
     logger.info(`Note created successfully by user :${req.user._id}`);
@@ -49,28 +47,41 @@ export const createNote = async (req, res) => {
   }
 };
 
-export const getAllNotes = async (req, res) => {
+export const getAllNotes=async(req,res)=>{
   try {
-    const notes = await Note.find({ user: req.user._id }).sort({
-      createdAt: -1,
-    });
 
-    return res.status(200).json(notes);
+    const{search}=req.query
+    const filter ={
+      user:req.user._id}
+    
+
+    if(search && typeof search === "string" && search.trim()!=""){
+
+    const escaperegex=(str)=>str.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+    const trimsearch=search.trim().slice(0,100)
+    const safesearch=escaperegex(trimsearch)
+
+      filter.$or=[
+        {title:{$regex:safesearch,$options:"i"}},
+        {content:{$regex:safesearch,$options:"i"}}
+      ]}
+    const notes = await Note.find(filter).sort({
+      createdAt:-1,
+    })
+    return res.status(200).json(notes)
   } catch (error) {
-    logger.error(`Error while getting all notes :${error}`);
-    res.status(500).json({ message: "Server error while getting all notes" });
-  }
-};
+    logger.error(`Error while getting all notes :${error}`)
+    res.status(500).json({message: "Server error while getting all notes"})
+  }}
 
-export const getNote =async (req, res)=>{
+export const getNote =async (req,res)=>{
   try {
-    const {note,error} = await findUserNote(req.params.id, req.user._id);
-    if (error === "Invalid id") {
-    return res.status(400).json({ message: "Invalid note id" });
+    const {note,error}=await findUserNote(req.params.id, req.user._id)
+    if (error ==="Invalid id") {
+    return res.status(400).json({ message: "Invalid note id" })
 }
-
      if(error==='Not found') {
-      return res.status(404).json({message:'Note not found'});}
+      return res.status(404).json({message:'Note not found'})}
 
   if(error==='Not authorize') {
       return res.status(403).json({message:' not authorized to access this note'});}
@@ -118,19 +129,18 @@ if (title !== undefined) {
   }
 }
 
-if (content !== undefined) {
-  if (typeof content !== "string") {
+if (content!==undefined){
+  if (typeof content!=="string"){
     return res.status(400).json({
       message: "Content must be a non-empty string"
-    });
+    })
   }
 
   if (content.trim() === "") {
     return res.status(400).json({
       message: "Content cannot be empty"
-    });
-  }
-}
+    })
+  }}
 
   if(title!==undefined){
     note.title = title;}

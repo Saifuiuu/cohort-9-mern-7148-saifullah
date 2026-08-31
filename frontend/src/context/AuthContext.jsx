@@ -1,4 +1,4 @@
-import { useState,createContext,useContext } from "react";
+import { useState,createContext,useContext, useEffect } from "react";
 import api from "../services/axios";
 
 
@@ -7,7 +7,27 @@ const AuthContext=createContext();
 export const AuthProvider=({children})=>{
 
     const [user,setUser]=useState(null)
-    const [loading,setLoading]=useState(false)
+    const [loading,setLoading]=useState(true)
+
+    useEffect(()=>{
+        const checkAuth=async()=>{
+            try {
+                const res=await api.get('/auth/profile')
+                setUser(res.data.user)
+            } catch (error) {
+                setUser(null)
+            }
+            finally{
+                setLoading(false)
+            }
+
+            
+        }
+        checkAuth()
+    },[])
+
+
+
 
 
 const signup=async(name,email,password)=>{
@@ -48,7 +68,7 @@ try {
    
 }
 return(
-    <AuthContext.Provider value={{signup,login,logout,user}}>
+    <AuthContext.Provider value={{signup,login,logout,user,loading}}>
         {children}
     </AuthContext.Provider>
 )
