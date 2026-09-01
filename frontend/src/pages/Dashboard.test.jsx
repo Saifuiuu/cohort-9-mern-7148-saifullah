@@ -61,6 +61,7 @@ describe("Dashboard",()=>{
   })
 
   test("shows notes after loading",async()=>{
+    try{
     api.get.mockResolvedValue({
       data:notes})
 
@@ -68,25 +69,40 @@ describe("Dashboard",()=>{
     expect(await screen.findByText("First note")).toBeInTheDocument()
     expect(screen.getByText("Second note")).toBeInTheDocument()
     expect(api.get).toHaveBeenCalledWith("/note",{params:{search:""}})
+    } catch (error) {
+        throw new Error(`show notes test failed after loading: ${error.message}`);
+    }
   })
+
   test("shows error when notes cannot be loaded",async()=>{
+    try{
     api.get.mockRejectedValue(
       new Error("Failed to load notes"))
 
     renderDashboard()
     expect(
       await screen.findByText("Failed to load notes")
-    ).toBeInTheDocument()})
+    ).toBeInTheDocument()
+  } catch (error) {
+        throw new Error(`load error test failed: ${error.message}`);
+    }
+  })
 
   test("shows message when there are no notes",async()=>{
+    try{
     api.get.mockResolvedValue({
       data:[]
     })
     renderDashboard()
     expect(
       await screen.findByText("no notes yet ! Create your first note")
-    ).toBeInTheDocument()})
+    ).toBeInTheDocument()
+  } catch (error) {
+        throw new Error(`no notes message test failed: ${error.message}`);
+    }})
+
   test("opens note when edit button is clicked",async()=>{
+    try{
     api.get.mockResolvedValue({
       data:[notes[0]]})
     renderDashboard()
@@ -97,8 +113,12 @@ describe("Dashboard",()=>{
     )
     fireEvent.click(editButton)
     expect(mockNavigate).toHaveBeenCalledWith("/note/1")
+  } catch (error) {
+        throw new Error(`open note test failed: ${error.message}`);
+    }
   })
   test("deletes a note successfully",async()=>{
+    try{
     api.get.mockResolvedValue({
       data:[notes[0]]
     })
@@ -120,8 +140,13 @@ describe("Dashboard",()=>{
         screen.queryByText("First note")
       ).not.toBeInTheDocument()
     })
+} catch (error) {
+        throw new Error(`Delete note  test failed: ${error.message}`);
+    }
+
   })
   test("shows error when deleting a note fails",async()=>{
+    try{
     api.get.mockResolvedValue({
       data:[notes[0]]
     })
@@ -140,4 +165,10 @@ describe("Dashboard",()=>{
     expect(
       await screen.findByText("Delete failed")
     ).toBeInTheDocument()
-  })})
+
+    } catch (error) {
+        throw new Error(`show error when deleting a note fails test failed: ${error.message}`);
+    }
+  })
+
+})

@@ -88,25 +88,32 @@ npm run test
 ```
 
 **With coverage (for SonarQube):**
+
+Backend:
 ```bash
+cd backend
 npm run test:coverage
 ```
 
-## SonarQube analysis
-
-If you have SonarQube running locally (via Docker), you can scan the whole project from the root folder:
-
+Frontend:
 ```bash
+cd frontend
+npm run test:coverage
+## SonarQube Analysis
+
+If you have SonarQube running locally (via Docker), you can scan the project from the root folder. You'll need your own SonarQube token — generate one from your SonarQube account settings.
+
+### Running the Scan
+
+ Via Environment Variable 
+```bash
+# Windows PowerShell
+$env:SONAR_TOKEN="your_token_here"
 npx @sonar/scan
-```
 
-Make sure `sonar-project.properties` has your token and the coverage reports exist in `backend/coverage` and `frontend/coverage` first.
-
-Current results:
-- Security: A
-- Reliability: A
-- Maintainability: A
-- Coverage: 80%+
+# Linux / Mac / Git Bash
+export SONAR_TOKEN="your_token_here"
+npx @sonar/scan
 
 ## API Endpoints
 
@@ -117,9 +124,8 @@ Current results:
 - `GET /api/auth/profile` — get logged-in user info
 
 **Notes** (all require login)
-- `GET /api/notes` — get all your notes (supports `?search=`)
-- `GET /api/notes/:id` — get one note
-- `POST /api/notes` — create a note
-- `PUT /api/notes/:id` — update a note
-- `DELETE /api/notes/:id` — delete a note
-
+- `GET /api/note` — get all your notes (supports `?search=`)
+- `GET /api/note/:id` — get one note
+- `POST /api/note` — create a note
+- `PUT /api/note/:id` — update a note
+- `DELETE /api/note/:id` — delete a note

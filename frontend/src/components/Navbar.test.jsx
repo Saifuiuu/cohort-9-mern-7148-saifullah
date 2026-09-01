@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent,waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Navbar from "./Navbar";
 import toast from "react-hot-toast";
@@ -11,17 +11,17 @@ let mockUser = {
   email: "saif@gmail.com"
 }
 
-jest.mock("../context/AuthContext", () => ({
+jest.mock("../context/AuthContext", ()=>({
   useAuth: () => ({
     user: mockUser,
     logout: mockLogout
   })}))
 
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router-dom", ()=>({
   ...jest.requireActual("react-router-dom"),
   useNavigate: () => mockNavigate}))
 
-jest.mock("react-hot-toast", () => ({
+jest.mock("react-hot-toast", ()=>({
   __esModule: true,
   default: {
     success: jest.fn(),
@@ -35,7 +35,7 @@ const renderNavbar = () => {
     </MemoryRouter>
   )}
 
-describe("Navbar", () => {
+describe("Navbar", ()=>{
   beforeEach(() => {
     jest.clearAllMocks();
   })
@@ -71,25 +71,46 @@ describe("Navbar", () => {
     fireEvent.mouseDown(document)
     expect(screen.queryByText("Logout")).not.toBeInTheDocument()})
 
-  test("handles successful logout correctly",async()=>{
-    mockUser={name:"Saif",email:"saif@gmail.com"}
-    mockLogout.mockResolvedValueOnce()
-    renderNavbar()
-    fireEvent.click(screen.getByRole("button",{name:"S"}))
-    fireEvent.click(screen.getByText("Logout"))
-    expect(mockLogout).toHaveBeenCalledTimes(1)
-    await screen.findByText("NoteNest")
-    expect(mockNavigate).toHaveBeenCalledWith("/login")
-    expect(toast.success).toHaveBeenCalledWith("Logout successfully")})
+test("handles successful logout correctly", async()=>{
+    try {
+        mockUser = { name: "Saif", email: "saif@gmail.com" }
+        mockLogout.mockResolvedValueOnce()
+        renderNavbar()
 
-  test("handles logout failure correctly",async()=>{
-    mockUser = { name: "Saif", email: "saif@gmail.com"}
-    mockLogout.mockRejectedValueOnce(new Error("Logout failed"))
-    renderNavbar()
-    fireEvent.click(screen.getByRole("button",{name:"S"}))
-    fireEvent.click(screen.getByText("Logout"))
-    expect(mockLogout).toHaveBeenCalledTimes(1)
-    await screen.findByText("NoteNest")
-    expect(toast.error).toHaveBeenCalledWith("Logout failed")
-    expect(mockNavigate).not.toHaveBeenCalledWith("/login")
-  })})
+        fireEvent.click(screen.getByRole("button",{name:"S"}))
+        fireEvent.click(screen.getByText("Logout"))
+
+        expect(mockLogout).toHaveBeenCalledTimes(1)
+
+        await waitFor(() => {
+            expect(mockNavigate).toHaveBeenCalledWith("/login")
+        })
+
+        await waitFor(() => {
+            expect(toast.success).toHaveBeenCalledWith("Logout successfully")
+        })
+    } catch (error) {
+        throw new Error(`Logout test failed: ${error.message}`);
+    }
+})
+
+test("handles logout failure correctly",async()=>{
+    try {
+        mockUser = { name: "Saif", email: "saif@gmail.com"}
+        mockLogout.mockRejectedValueOnce(new Error("Logout failed"))
+        renderNavbar()
+
+        fireEvent.click(screen.getByRole("button",{name:"S"}))
+        fireEvent.click(screen.getByText("Logout"))
+
+        expect(mockLogout).toHaveBeenCalledTimes(1)
+
+        await waitFor(() => {
+            expect(toast.error).toHaveBeenCalledWith("Logout failed")
+        })
+
+        expect(mockNavigate).not.toHaveBeenCalledWith("/login")
+    } catch (error) {
+        throw new Error(`Logout test failed: ${error.message}`);
+    }
+})})
