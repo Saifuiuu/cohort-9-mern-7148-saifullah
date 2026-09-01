@@ -17,19 +17,17 @@ const wrapper=({children})=>(
 describe("AuthContext",()=>{
   beforeEach(()=>{
     jest.clearAllMocks()
-  });
+  })
 
   test("should load user profile",async()=>{
     try {
-   
     api.get.mockResolvedValue({
       data:{
         user:{
           _id:"123",
           name:"Saif",
           email:"saif@gmail.com",
-        },},
-    })
+        },},})
 
     const {result}=renderHook(()=>useAuth(),{wrapper})
 

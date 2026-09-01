@@ -71,24 +71,23 @@ const Login=()=>{
   <div className="w-full md:w-1/2 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
          
-<div className="md:hidden mb-10"> <h1 className="text-2xl font-bold">  Note
-  <span className="text-indigo-400">Nest  </span>
-</h1> </div>
+<div className="md:hidden mb-10"><h1 className="text-2xl font-bold">Note<span className="text-indigo-400">Nest</span>
+</h1></div>
           <div className="mb-8">
       <h2 className="text-3xl font-bold"> Welcome back</h2>
  <p className="text-slate-400 mt-2"> Sign in to continue to your notes</p></div>
 
 <form  onSubmit={handleSubmit}className="space-y-5" >
   <div>
- <label className="block text-sm text-slate-300 mb-2">Email</label>
- <input  type="email"  placeholder="you@example.com"  value={email}
+ <label className="block text-sm text-slate-300 mb-2" htmlFor="email">Email</label>
+ <input  type="email" id="email" placeholder="you@example.com"  value={email}
   onChange={(e) => setEmail(e.target.value)} required className="  w-full  bg-slate-900 
    border-slate-800 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 
  outline-none  focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition"/></div>
   <div> <div className="flex justify-between items-center mb-2">
-        <label className="text-sm text-slate-300">Password</label></div>
+        <label className="text-sm text-slate-300" htmlFor="password">Password</label></div>
 
- <input type="password" placeholder="••••••••" value={password}  onChange={(e) => setPassword(e.target.value)}
+ <input type="password" placeholder="••••••••" value={password} id="password"  onChange={(e) => setPassword(e.target.value)}
   required className=" w-full bg-slate-900 border border-slate-800 rounded-xl
  px-4 py-3 text-white placeholder:text-slate-600 outline-none focus:border-indigo-500
   focus:ring-2 focus:ring-indigo-500/20 transition"/> </div>

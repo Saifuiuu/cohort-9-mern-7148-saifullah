@@ -11,6 +11,7 @@ import cors from 'cors'
 dotenv.config()
 
 const app=express()
+app.disable('x-powered-by')
 
 const PORT=process.env.PORT
 

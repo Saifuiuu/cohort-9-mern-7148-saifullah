@@ -122,30 +122,30 @@ const Signup = () => {
 
            
             <div>
-              <label className="block text-sm text-slate-300 mb-2">
+              <label className="block text-sm text-slate-300 mb-2" htmlFor="name">
                 Name
               </label>
 
-              <input type="text" placeholder="Saifullah" value={name} onChange={(e) => setName(e.target.value)}
+              <input type="text" placeholder="Saifullah" value={name} onChange={(e) => setName(e.target.value)} id="name"
   required className=" w-full  bg-slate-900  border border-slate-800  rounded-xl  px-4 py-3  text-white
   placeholder:text-slate-600  outline-none  focus:border-indigo-500  focus:ring-2  focus:ring-indigo-500/20  transition "  />
             </div>            
             <div>
-              <label className="block text-sm text-slate-300 mb-2">
+              <label className="block text-sm text-slate-300 mb-2" htmlFor="email">
                 Email
               </label>
 
-              <input  type="email"  placeholder="you@example.com"  value={email}  onChange={(e) => setEmail(e.target.value)}
+              <input  type="email"  placeholder="you@example.com"  value={email} id="email" onChange={(e) => setEmail(e.target.value)}
   required className="  w-full  bg-slate-900  border border-slate-800  rounded-xl  px-4 py-3  text-white
   placeholder:text-slate-600 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20
    transition"/> </div>
    
             <div>
-              <label className="block text-sm text-slate-300 mb-2">
+              <label className="block text-sm text-slate-300 mb-2" htmlFor="password">
                 Password
               </label>
 
-              <input type="password" placeholder="••••••••" value={password}  onChange={(e) => setPassword(e.target.value)}
+              <input type="password" placeholder="••••••••" value={password} id="password" onChange={(e) => setPassword(e.target.value)}
   required className=" w-full bg-slate-900  border border-slate-800 rounded-xl px-4 py-3 text-white
   placeholder:text-slate-600 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20
   transition"/></div>

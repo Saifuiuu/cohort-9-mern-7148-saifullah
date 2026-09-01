@@ -112,7 +112,7 @@ describe("NoteEditor",()=>{
     );
   });
 
-  test("creates a new note successfully", async () => {
+  test("creates a new note successfully",async ()=>{
     try {
        api.post.mockResolvedValue({
       data: {
@@ -144,7 +144,7 @@ describe("NoteEditor",()=>{
       screen.getByRole("button", {
         name: "Create Note",
       })
-    );
+    )
 
     await waitFor(() => {
       expect(api.post).toHaveBeenCalledWith(
@@ -361,12 +361,10 @@ try {
     expect(
       await screen.findByText(
         "Failed to update note"
-      )
-    ).toBeInTheDocument()
+      ) ).toBeInTheDocument()
 
     expect(mockNavigate).not.toHaveBeenCalledWith(
-      "/dashboard"
-    )} 
+      "/dashboard")} 
     catch (error) {
        throw new Error(`test faild ${error.message}`)}
     })

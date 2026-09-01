@@ -94,7 +94,9 @@ readOnly={loadError||loading} id="content"
 className="min-h-[300px] text-black"
 />
 </div>
-<div className="flex gap-4">
+
+
+  <div className="flex gap-4">
 <button type="button" onClick={()=>navigate('/dashboard')}
 className="px-5 py-2.5 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white transition">
 Cancel</button>

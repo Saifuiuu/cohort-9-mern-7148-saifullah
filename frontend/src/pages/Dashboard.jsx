@@ -91,7 +91,6 @@ if (loading) {
      
      <div className='flex items-center justify-between mb-8'>
 
-
       <div>
       <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-100">
         My Notes
@@ -102,8 +101,6 @@ if (loading) {
       </p>
     </div>
 
-
-
 <div className=' mx-w-xl flex gap-3'>
   <input   type='text' value={search} placeholder='Search notes..'
   onChange={(e)=>{setSearch(e.target.value)}}  aria-label="Search notes"
@@ -112,9 +109,8 @@ if (loading) {
    
 </div>
 
-
      <button
-    onClick={() => navigate('/note/new')}
+    onClick={() => navigate('/note/new')} type='button'
     className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500
       active:bg-indigo-700 text-white font-semibold px-5 py-3 rounded-xl
       transition-all duration-200 shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/30
@@ -136,15 +132,14 @@ if (loading) {
   dangerouslySetInnerHTML={{__html:note.content?.slice(0,100)}}>
   </p>
 
-
 <div className='flex justify-end mt-auto '>
 
-<button className='  text-indigo-400  px-4 py-2 rounded-lg text-sm'
+<button className='  text-indigo-400  px-4 py-2 rounded-lg text-sm' type='button'
 onClick={()=>{navigate(`/note/${note._id}`)}} aria-label='Edit note'>
   <  Pencil size={18}/>
 </button>
 
-<button className='text-red-400 px-4 py-2 rounded-lg text-sm hover:bg-red-500/10'
+<button className='text-red-400 px-4 py-2 rounded-lg text-sm hover:bg-red-500/10' type='button'
 onClick={()=>{handleDelete(note._id)}} aria-label='Delete note'>
   <Trash2 size={18}/>
 </button>

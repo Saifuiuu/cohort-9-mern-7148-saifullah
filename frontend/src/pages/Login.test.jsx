@@ -53,16 +53,13 @@ describe("Login",()=>{
     const passwordInput=screen.getByPlaceholderText("••••••••")
 
     fireEvent.change(emailInput,{
-      target:{value:"saif@gmail.com"},
-    })
+      target:{value:"saif@gmail.com"},})
 
     fireEvent.change(passwordInput,{
-      target:{value:"12345"},
-    })
+      target:{value:"12345"},})
 
     expect(emailInput).toHaveValue("saif@gmail.com")
-    expect(passwordInput).toHaveValue("12345")
-  })
+    expect(passwordInput).toHaveValue("12345")})
 
   test("calls login and navigates to dashboard on successful login",async()=>{
     mockLogin.mockResolvedValue({})
@@ -71,23 +68,19 @@ describe("Login",()=>{
 
     fireEvent.change(
       screen.getByPlaceholderText("you@example.com"),
-      {target:{value:"saif@gmail.com"}}
-    )
+      {target:{value:"saif@gmail.com"}})
 
     fireEvent.change(
       screen.getByPlaceholderText("••••••••"),
-      {target:{value:"12345"}}
-    )
+      {target:{value:"12345"}})
 
     fireEvent.click(
-      screen.getByRole("button",{name:"Login"})
-    )
+      screen.getByRole("button",{name:"Login"}))
 
     await waitFor(()=>{
       expect(mockLogin).toHaveBeenCalledWith(
         "saif@gmail.com",
-        "12345"
-      )
+        "12345")
     })
 
     expect(mockNavigate).toHaveBeenCalledWith("/dashboard")
@@ -95,24 +88,20 @@ describe("Login",()=>{
 
   test("shows error when login fails",async()=>{
     mockLogin.mockRejectedValue(
-      new Error("Invalid credentials")
-    )
+      new Error("Invalid credentials"))
 
     render(<Login/>)
 
     fireEvent.change(
       screen.getByPlaceholderText("you@example.com"),
-      {target:{value:"saif@gmail.com"}}
-    )
+      {target:{value:"saif@gmail.com"}})
 
     fireEvent.change(
       screen.getByPlaceholderText("••••••••"),
-      {target:{value:"wrong"}}
-    )
+      {target:{value:"wrong"}})
 
     fireEvent.click(
-      screen.getByRole("button",{name:"Login"})
-    )
+      screen.getByRole("button",{name:"Login"}))
 
     expect(
       await screen.findByText("Invalid credentials")
@@ -125,8 +114,7 @@ describe("Login",()=>{
     render(<Login/>)
 
     fireEvent.click(
-      screen.getByRole("button",{name:"Sign up"}) )
+      screen.getByRole("button",{name:"Sign up"}))
 
-    expect(mockNavigate).toHaveBeenCalledWith("/signup")
-  })
+    expect(mockNavigate).toHaveBeenCalledWith("/signup")})
 })

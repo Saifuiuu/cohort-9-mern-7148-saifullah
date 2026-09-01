@@ -38,7 +38,7 @@ const Navbar = () => {
 
             <div className="relative" ref={popupRef}>
                 <button
-                    onClick={() => setShowPopup(!showPopup)}
+                    onClick={() => setShowPopup(!showPopup)} type='button'
                     className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold hover:bg-blue-600 transition"
                 >
                     {firstLetter}
@@ -50,7 +50,7 @@ const Navbar = () => {
                         <p className="text-sm text-gray-400 truncate mb-3">{user?.email}</p>
                         <hr className="border-gray-700 mb-3" />
                         <button
-                            onClick={handleLogout}
+                            onClick={handleLogout} type='button'
                             className="w-full text-left text-red-400 hover:text-red-300 text-sm"
                         >
                             Logout

@@ -64,17 +64,11 @@ try {
 
 } catch (error) {
     throw new Error(error.response?.data?.message||error.message||"Logout failed")
-}
-   
-}
+}}
 return(
     <AuthContext.Provider value={{signup,login,logout,user,loading}}>
         {children}
     </AuthContext.Provider>
 )
-
-
 }
-
-
 export const useAuth=()=>useContext(AuthContext)
